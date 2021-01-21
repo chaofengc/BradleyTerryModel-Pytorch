@@ -35,7 +35,6 @@ class BradleyTerryModel(nn.Module):
 
 
 def bradley_terry_inference(win_matrix, lr=0.01, iters=500):
-    win_matrix = torch.tensor(win_matrix)
     model = BradleyTerryModel(win_matrix.shape[0])
     optimizer = optim.Adam(model.parameters(), lr=lr)
 
@@ -44,15 +43,27 @@ def bradley_terry_inference(win_matrix, lr=0.01, iters=500):
         loss = model(win_matrix)
         loss.backward()
         optimizer.step()
-    return model.get_rank()
+    return model.get_rank(), model.get_win_rate()
 
 if __name__ == '__main__':
+    #  win_matrix = torch.tensor([
+            #  [0, 8, 3],
+            #  [4, 0, 2],
+            #  [5, 3, 0],
+            #  ])
+
     win_matrix = torch.tensor([
-            [0, 8, 3],
-            [4, 0, 2],
-            [5, 3, 0],
+            [0, 7, 9, 7, 7, 9, 11],
+            [6, 0, 7, 5, 11, 9, 9],
+            [4, 6, 0, 7, 7, 8, 12],
+            [6, 8, 6, 0, 6, 7, 10],
+            [6, 2, 6, 7, 0, 7, 12],
+            [4, 4, 5, 6, 6, 0, 6],
+            [2, 4, 1, 3, 1, 7, 0]
             ])
-    bradley_terry_inference(win_matrix)
+
+    rank, win_rate = bradley_terry_inference(win_matrix)
+    print(rank, '\n', win_rate)
 
 
 
